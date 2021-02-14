@@ -1,0 +1,651 @@
+//ERROR PIX
+1-//System.Data.SqlClient canot FOUND  vertion 4.6 .NET
+right clish solution--> Manage nuget Package --> search you want class "System.Data.SqlClient;" install vertion
+//
+/*
+server explora open
+2 right click our server name and database connect to  .net
+
+*/
+
+https://www.youtube.com/watch?v=CrSC1ZA9j0M&ab_channel=DailyTuition
+
+
+
+
+using System;
+using System.Data;
+using System.Data.SqlClient;//sql dtabase connection class
+using System.Runtime.InteropServices.ComTypes;
+
+namespace ClassLibrary1
+{
+    public class Class1
+    {
+        //how to connect database
+        public void StudentDatabaseConnect()
+        {
+             // SqlConnection con = new SqlConnection("Data Source=DESKTOP-E69Q7DF;Initial Catalog=customer;Integrated Security=True");
+
+            //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+            SqlConnection con = new SqlConnection();
+
+            try
+            {
+               
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login
+                con.ConnectionString = "server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true";
+
+                /*
+                //2-this used to MSSQLSERVER to WIndowsAuthenticathion or sql server authentication with user name and password login
+                con.ConnectionString = "server=  TypeyourServerOrComputerName; database= typeyourDatabaseName;StudentDatabaseConnect();";
+               */
+
+                /*
+                //3-this code used to external(network ekk thin pc ekk) server sql database login with username and password
+                con.ConnectionString = "server=DESKTOP-E69Q7DF; database=db_SMS;Network Library=DBMSSOCH; integrity security=true, StudentDatabaseConnect();";
+                */
+                con.Open();
+                Console.WriteLine("CONNECTION OPEN");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+        }
+        //how to insert data execute
+        public void sqlCommandclass()
+        {
+            //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+            SqlConnection con = new SqlConnection();
+
+            try
+            {
+
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login
+                con.ConnectionString = "server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true";
+
+                int id = 20;
+                string name = "jjjjjjj";
+                int age = 15;
+
+                String sql = "INSERT INTO student_table VALUES(" + id + ",'" + name + "'," + age + ")";
+                //2-sqlcomman class TO PASS SQL QUERY AND CONNECTION CLASS CON
+                SqlCommand sc = new SqlCommand(sql, con);
+
+                con.Open();
+                Console.WriteLine("CONNECTION OPEN");
+
+                //this method used to execute aftre the sql query then intiger return intiger value
+                /*
+                 ExecuteNonQuery() if worked return value=1  ,  else return value=0
+                 */
+                if (sc.ExecuteNonQuery() > 0)
+                {
+                    Console.WriteLine("---INSERTED DATA---");
+                }
+                else
+                {
+                    Console.WriteLine("---EXECUTE ERROR---");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+        }
+        //how to search data
+        public void sqlDataADapterClass()
+        {
+            //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+            SqlConnection con = new SqlConnection();
+           
+            try
+            {
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login without username and password
+                con.ConnectionString = "server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true";
+
+                int id = 20;
+                String sql = " SELECT   [user_name] ,[password] FROM [BlackLotusDB].[dbo].[LoginTable] WHERE  [user_name] = '"+username+"' AND [password] = '"+password+"' ";
+                String sql = "SELECT *FROM student_table WHERE id="+id+"  ";
+
+                //2-sqlDataAdapter class TO PASS SQL QUERY AND CONNECTION CLASS CON variables as a parameeter
+                SqlDataAdapter sda = new SqlDataAdapter(sql,con);
+                con.Open();
+                Console.WriteLine("CONNECTION OPEN");
+
+                //data set class obj used to put result put                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                DataSet ds = new DataSet();
+
+                //fill method used to return tables rows data result put
+                sda.Fill(ds);
+                
+                if( ds.Tables[0].Rows.Counts> 0)
+                {
+                    //out put result set to x,y variables in DATABASE STUDENTTABLE SPECIPIC COLUMS INDEXS
+                    /*ds.Table[0].Rows[0][1]; 
+                     api eliyat gann oni TABLE EKE DATA THIN ROW AND COLUM INDEX ek thin thana
+                    */
+
+
+                    String x = ds.Table[0].Rows[0][1];
+                    String y = ds.Table[0].Rows[0][2];
+
+
+                    string name, age;
+                    this.name = x;
+                    this.age  = y;
+
+                }
+                else
+                {
+                    Console.WriteLine("---RECORD NOT FOUND---");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+        }
+        //how to update data using parameterclass  OPTION -1  separate objects to pass name and value
+        public void sqParameeterClass()
+        {                                             //Data Source =.; Initial Catalog = BlackLotusDB; Integrated Security = True 
+            //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+            SqlConnection con = new SqlConnection();
+
+            try
+            {
+
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login
+//Data Source =.; Initial Catalog = BlackLotusDB; Integrated Security = True
+                con.ConnectionString = "server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true";
+
+                int id = 20;
+                String name = "update";
+                int age = 56;
+
+                //@variable name use in parameeter class
+                String sql = "UPDATE student_table SET name=@name, age=@age WHERE id=@id  ";
+
+                //2-sqlcommand class TO PASS SQL QUERY AND CONNECTION CLASS CON
+                SqlCommand sc = new SqlCommand(sql, con);
+
+                /*----OPTION 1 oy vidiyt wen wenm hadann oni---*/
+                SqlParameter sp1 = new SqlParameter();
+                sp1.value = name;
+                sp1.ParameterName ="@name";
+
+                SqlParameter sp2 = new SqlParameter();
+                sp2.value = age;
+                sp2.ParameterName = "@age";
+
+                SqlParameter sp3 = new SqlParameter();
+                sp3.value = id;
+                sp3.ParameterName = "@id";
+
+                con.Open();
+                Console.WriteLine("CONNECTION OPEN");
+
+                //sql command classs parameter property to add values
+                sc.Parameter.Add(sp1);
+                sc.Parameter.Add(sp2);
+                sc.Parameter.Add(sp3);
+
+                //this method used to execute aftre the sql query then intiger return intiger value
+                /*
+                 ExecuteNonQuery() if worked return value=1  ,  else return value=0
+                 */
+                if (sc.ExecuteNonQuery() > 0)
+                {
+                    Console.WriteLine("---UPDATED DATA---");
+                }
+                else
+                {
+                    Console.WriteLine("---EXECUTE ERROR---");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+        }
+        //how to DELETE data using parameterclass OPTION -2  directly constructor to pass name and value
+        public void sqParameeterClass()
+        {
+            //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+            SqlConnection con = new SqlConnection();
+
+            try
+            {
+
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login
+//Data Source =.; Initial Catalog = BlackLotusDB; Integrated Security = True
+                con.ConnectionString = "server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true";
+
+                int id = 20;
+                
+                //@variable name use in parameeter class
+                String sql = "DELETE FROM  student_table  WHERE id=@id  ";
+
+                //2-sqlcommand class TO PASS SQL QUERY AND CONNECTION CLASS CON
+                SqlCommand sc = new SqlCommand(sql, con);
+
+                /*----OPTION 2 oy vidiyt wen wenm hadann oni---PARAMETER OBECT AND VALUE DIRECTLY PASS TO CONSTRUCTOR*/
+                SqlParameter sp3 = new SqlParameter("@id",id);
+         
+                con.Open();
+                Console.WriteLine("CONNECTION OPEN");
+
+                //sql command classs parameter property to add values
+                sc.Parameter.Add(sp3);
+
+                //this method used to execute aftre the sql query then intiger return intiger value
+                /*
+                 ExecuteNonQuery() if worked return value=1  ,  else return value=0
+                 */
+                if (sc.ExecuteNonQuery() > 0)
+                {
+                    Console.WriteLine("---DELETED DATA---");
+                }
+                else
+                {
+                    Console.WriteLine("---EXECUTE ERROR---");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+        }
+        //how to DELETE data using command class OPTION -3  directly constructor to pass name and value
+        public void sqlCommandClass()
+        {
+            //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+            SqlConnection con = new SqlConnection();
+
+            try
+            {
+
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login
+                con.ConnectionString = "server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true";
+
+                int id = 20;
+
+                //@variable name use in parameeter class
+                String sql = "DELETE FROM  student_table  WHERE id=@id  ";
+
+                //2-sqlcommand class TO PASS SQL QUERY AND CONNECTION CLASS CON
+                SqlCommand sc = new SqlCommand(sql, con);
+
+                con.Open();
+                Console.WriteLine("CONNECTION OPEN");
+
+                //sql command classs parameters property to add values
+                /*----OPTION 3 oy vidiyt wen wenm hadann oni---PARAMETER OBECT AND VALUE DIRECTLY PASS TO CONSTRUCTOR*/
+                sc.Parameters.AddWithValue("@id", id);
+
+                //this method used to execute aftre the sql query then intiger return intiger value
+                /*
+                 ExecuteNonQuery() if worked return value=1  ,  else return value=0
+                 */
+                if (sc.ExecuteNonQuery() > 0)
+                {
+                    Console.WriteLine("---DELETED DATA---");
+                }
+                else
+                {
+                    Console.WriteLine("---EXECUTE ERROR---");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+        }
+        //how to select query data data read to in database table
+        public void sqlDataReaderClass()
+        {
+            //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+            SqlConnection con = new SqlConnection();
+
+            //Data reader class instance vaiable create
+            sqlDataReaderClass dr=null;
+
+            try
+            {
+
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login
+                con.ConnectionString = "server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true";
+
+                //search id value
+                int id = 20;
+
+                //query create class to id search
+                String sql = "SELECT FROM  student_table  WHERE id="+id+"  ";
+
+                //2-sqlcommand class TO PASS SQL QUERY AND CONNECTION CLASS CON to execute
+                SqlCommand sc = new SqlCommand(sql, con);
+
+                con.Open();
+                Console.WriteLine("CONNECTION OPEN");
+
+                //dr object to put sqlcommand object to excute result read ExecuteReader();
+                dr = sc.ExecuteReader();
+
+
+                //HasRows() method used to check rows thinwd balann serch krn id ekt adalawa
+                if (dr.HasRows)
+                {
+                    Console.WriteLine("---READ DATA---");
+                    while (dr.Read())
+                    {
+                        /* dr[0].ToString(); kiyanne select statement ek 
+                         execute karal out put krn databse table eke colum index ek  */
+
+                        //mekedi oup put karnne ek row ekk thin colum data vithari
+                        String outid = dr[0].ToString();
+                        String outname = dr[1].ToString();
+                        String outage = dr[2].ToString();
+
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("---EXECUTE ERROR---");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+        }
+
+
+        //RUN programm in main METHOD
+        public static void Main(string[] args)
+        {
+            //instance object throught call the class method
+            new Class1().StudentDatabaseConnect();
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.Sql;//add connectint db
+using System.Data.SqlClient;//add query perform
+using System.Drawing.Text;
+namespace WindowsFormsApp1
+{
+    public partial class Form1 : Form
+    {
+
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection("Data Source=DESKTOP-E69Q7DF;Initial Catalog=customer;Integrated Security=True");
+
+            try
+            {
+               
+                ////1-this used to MSSQLSERVER to WIndowsAuthenticathion login
+              //  con.ConnectionString = "Data Source=DESKTOP-E69Q7DF;Initial Catalog=customer;Integrated Security=True";
+                con.Open();
+                MessageBox.Show("CONNECTION OPEN");
+
+                string a = textBox1.Text.ToString();
+                string b = textBox2.Text.ToString();
+                string c = textBox3.Text.ToString();
+                string d = textBox4.Text.ToString();
+
+                MessageBox.Show(a+" "+b+" "+c+" "+d);
+
+                String sql = "INSERT INTO loigntable VALUES('" + a +"','"+ b +"','"+ c +"','"+ d +"')";
+                //2-sqlcomman class TO PASS SQL QUERY AND CONNECTION CLASS CON
+                SqlCommand sc = new SqlCommand(sql,con);
+
+                if (sc.ExecuteNonQuery() > 0)
+                {
+                    MessageBox.Show("----INSERTED-----");
+                }
+                else
+                {
+                    MessageBox.Show("----NOT EXECUTED-----");
+                }
+            }
+            catch (SqlException odbcEx)
+            {
+                // Handle more specific SqlException exception here.
+                MessageBox.Show(odbcEx.Message);
+            }
+            catch (Exception ex)
+            {
+               
+                MessageBox.Show("-- - ERROR IN SQL CONNECTION-- - "+ "/n" + ex);
+            }
+            finally
+            {
+                con.Close();
+                MessageBox.Show("CONNECTION CLOSE");
+            }
+        }
+    }
+}
+        
+
+
+ private void Logincheck(object sender, EventArgs e)
+        {
+
+            //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+           SqlConnection con = new SqlConnection();
+
+            try
+            {
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login without username and password
+                con.ConnectionString =" Data Source =.; Initial Catalog = BlackLotusDB; Integrated Security = True ";
+
+                //pass check to username and password data
+                String username = loginemil.Text;
+                String password = loginpassword.Text;
+
+                String sql = " SELECT   [user_name] ,[password] FROM [BlackLotusDB].[dbo].[LoginTable] WHERE  [user_name] = '"+username+"' AND [password] = '"+password+"' ";
+                //"SELECT 'user_name' , 'password' LoginTable WHERE 'user_name' ='" + username + "' AND  'password' = '" + password + "'  ";
+                SqlCommand sc = new SqlCommand(sql, con);
+                con.Open();
+
+                SqlDataReader dr;
+                dr = sc.ExecuteReader();
+
+               
+                if (dr.HasRows)
+                {
+                    String u="", p="";
+
+                    while (dr.Read())
+                    {
+                       
+                        u = dr["user_name"].ToString();
+                        p = dr["password"].ToString();
+                    }
+
+                    if ( (username == u) && (password == p))
+                    {
+                        MessageBox.Show("--Login Success--");
+                        this.Hide();
+                        //open to show dashboard==work form
+                        WorkForm workformobj = new WorkForm();
+                        workformobj.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show("--Login Failed--");
+                    }
+
+                }
+                
+                else
+                {
+                    this.Hide();
+                    MessageBox.Show("--Inccorect Username or Password--");
+                    new Login().Show();
+                    
+                }
+
+
+                dr.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+
+
+           
+
+        }
+
+    
+//login check
+public void checklogin{
+ //  SqlConnection con = new SqlConnection(@"server=DESKTOP-E69Q7DF; database=db_SMS; integrity security=true");
+           SqlConnection con = new SqlConnection();
+
+            try
+            {
+                //1-this used to MSSQLSERVER to WIndowsAuthenticathion login without username and password
+                con.ConnectionString =" Data Source =.; Initial Catalog = BlackLotusDB; Integrated Security = True ";
+
+                //pass check to username and password data
+                String username = loginemil.Text;
+                String password = loginpassword.Text;
+
+                String sql = " SELECT   [user_name] ,[password] FROM [BlackLotusDB].[dbo].[LoginTable] WHERE  [user_name] = '"+username+"' AND [password] = '"+password+"' ";
+                //"SELECT 'user_name' , 'password' LoginTable WHERE 'user_name' ='" + username + "' AND  'password' = '" + password + "'  ";
+                SqlCommand sc = new SqlCommand(sql, con);
+                con.Open();
+
+                SqlDataReader dr;
+                dr = sc.ExecuteReader();
+
+               
+                if (dr.HasRows)
+                {
+                    String u="", p="";
+
+                    while (dr.Read())
+                    {
+                       
+                        u = dr["user_name"].ToString();
+                        p = dr["password"].ToString();
+                    }
+
+                    if ( (username == u) && (password == p))
+                    {
+                        MessageBox.Show("--Login Success--");
+                        this.Hide();
+                        //open to show dashboard==work form
+                        WorkForm workformobj = new WorkForm();
+                        workformobj.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show("--Login Failed--");
+                    }
+
+                }
+                
+                else
+                {
+                    this.Hide();
+                    MessageBox.Show("--Inccorect Username or Password--");
+                    new Login().Show();
+                    
+                }
+
+                dr.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine("---ERROR IN SQL CONNECTION---");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                
+                con.Close();
+                Console.WriteLine("CONNECTION CLOSE");
+            }
+        
+}
+
